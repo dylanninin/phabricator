@@ -58,8 +58,6 @@ final class ManiphestTaskListView extends ManiphestView {
       }
 
       $status = $task->getStatus();
-      $status_name = ManiphestTaskStatus::getTaskStatusName($status);
-      $item->addAttribute($status_name);
       if ($task->isClosed()) {
         $item->setDisabled(true);
       }

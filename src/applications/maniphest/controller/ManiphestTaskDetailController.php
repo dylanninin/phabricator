@@ -183,6 +183,8 @@ final class ManiphestTaskDetailController extends ManiphestController {
     // the duplicate status explicitly.
     unset($resolution_types[$task->getStatus()]);
     unset($resolution_types[ManiphestTaskStatus::getDuplicateStatus()]);
+    unset($resolution_types[ManiphestTaskStatus::getDefaultStatus()]);
+    unset($resolution_types[ManiphestTaskStatus::getDefaultClosedStatus()]);
 
     // Don't show owner/priority changes for closed tasks, as they don't make
     // much sense.
