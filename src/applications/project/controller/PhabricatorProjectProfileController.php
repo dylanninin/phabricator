@@ -141,9 +141,35 @@ final class PhabricatorProjectProfileController
     $phids = array_filter($phids);
     $handles = $this->loadViewerHandles($phids);
 
+    //remove subtasks
+    $top_tasks = array();
+    foreach ($tasks as $task){
+      $e_dep_by = PhabricatorEdgeConfig::TYPE_TASK_DEPENDED_ON_BY_TASK;
+      $e_dep_on = PhabricatorEdgeConfig::TYPE_TASK_DEPENDS_ON_TASK;
+
+      $phid = $task->getPHID();
+
+      $query = id(new PhabricatorEdgeQuery())
+          ->withSourcePHIDs(array($phid))
+            ->withEdgeTypes(
+              array(
+                $e_dep_by,
+              ));
+      $edges = idx($query->execute(), $phid);
+      $e_dep_by_phids = $edges[$e_dep_by];
+      if (count($e_dep_by_phids) > 0){
+        continue;
+      }
+      else{
+        array_push($top_tasks, $task);
+      }
+    }
+    
+
     $task_list = new ManiphestTaskListView();
     $task_list->setUser($user);
-    $task_list->setTasks($tasks);
+    //$task_list->setTasks($tasks);
+    $task_list->setTasks($top_tasks);
     $task_list->setHandles($handles);
 
     $phid = $project->getPHID();
