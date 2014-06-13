@@ -131,7 +131,7 @@ final class PhabricatorProjectProfileController
       ->withAnyProjects(array($project->getPHID()))
       ->withStatuses(ManiphestTaskStatus::getOpenStatusConstants())
       ->setOrderBy(ManiphestTaskQuery::ORDER_PRIORITY)
-      ->setLimit(10);
+      ->setLimit(100);
     $tasks = $query->execute();
 
     $phids = mpull($tasks, 'getOwnerPHID');
